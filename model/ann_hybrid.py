@@ -63,6 +63,11 @@ def plot_history(history):
     plt.legend()
     plt.show()
 
+def retrieve_other_modalites():
+    modelInput = []
+    # TODO: integrate the modalities.
+    return modelInput # e.g. [10074.535, 2079.027, 828.732, 1558.949, 322.472, 639.5, 36.95]
+
 def run(scheme):
     if scheme.lower() == "test":
         modelPath = input("Enter a model path: ")
