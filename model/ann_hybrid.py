@@ -10,6 +10,7 @@ from keras.utils import np_utils
 from sklearn import preprocessing
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 from sklearn.model_selection import train_test_split
+import matplotlib.pyplot as plt
 
 np.random.seed(7)
 
@@ -48,16 +49,35 @@ def train(X_train, Y_train, model, epochs, batchSize):
 dataFrame = pandas.read_csv("../data/modelinputwithmeanNew.csv")
 X_train, X_val_and_test, Y_train, Y_val_and_test, X_val, X_test, Y_val, Y_test =  preprocess(dataFrame)
 
+# input e.g. [10074.535, 2079.027, 828.732, 1558.949, 322.472, 639.5, 36.95]
+def preprocess_inferring_data(data):
+    array = []
+    for d in data:
+        array.append([d, 0, 0, 0, 0, 0, 0])
+    return np.asarray(array)
+
+def plot_history(history):
+    plt.title('Loss')
+    plt.plot(history.history['loss'], label='train')
+    plt.plot(history.history['val_loss'], label='test')
+    plt.legend()
+    plt.show()
+
 def run(scheme):
-    if scheme == "test":
-        model = load_model("CNN_2.h5")
+    if scheme.lower() == "test":
+        modelPath = input("Enter a model path: ")
+        model = load_model(str(modelPath))
         if (model ==  None):
             print("Invalid Path")
         else:
-            print("Model loaded.")
+            print("Model loaded. Please enter an input with shape: " + str(model.layers[0].input_shape))
+            # input to be inferred.
+            pred = model.predict(preprocess_inferring_data([10074.535, 2079.027, 828.732, 1558.949, 322.472, 639.5, 36.95]))
+            labels = ['Awake', 'Moderate', 'Drowsy']
+            print("Predicted vector: ", pred , " Predicted Class: ", labels[np.argmax(pred)])
             # Do whatever
-    elif scheme == "train":
-        path = input("Enter a path to save the model:")
+    elif scheme.lower() == "train":
+        path = input("Enter a path to save the model: ")
         model = create_model()
         history = train(X_train, Y_train, model, epochs, batchSize)
         accr = model.evaluate(X_test, Y_test)
@@ -73,6 +93,7 @@ def run(scheme):
         cm = confusion_matrix(y_labels, y_pred)
         print(cm)
         print(classification_report(y_labels, y_pred))
+        plot_history(history)
     else:
         print("PLEASE ENTER A FUCKING LEGIT SCHEME.")
 
