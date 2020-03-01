@@ -20,8 +20,9 @@ batchSize = 150
 def preprocess(df):
     # df = shuffle(data)
     dataset = df.values
-    X = dataset[: , 0:7]
-    Y = dataset[: , 7]
+    X = dataset[: ,[11,12,13,14,19,22]]
+    # X = dataset[:, [0, 1, 2, 3, 4, 19, 22]]
+    Y = dataset[: , 5]
     dummy_y = np_utils.to_categorical(Y)
     min_max_scaler = preprocessing.MinMaxScaler()
     X_scaler = min_max_scaler.fit_transform(X)
@@ -33,7 +34,8 @@ def preprocess(df):
 def create_model():
     model = Sequential()
     model = Sequential()
-    model.add(Dense(32, input_dim=7, activation='sigmoid'))
+    # model.add(Dense(32, input_dim=7, activation='sigmoid'))
+    model.add(Dense(32, input_dim=6, activation='sigmoid'))
     model.add(Dropout(0.2))
     # model.add(Dense(60, activation='relu'))
     # model.add(Dropout(0.2))
@@ -46,8 +48,8 @@ def train(X_train, Y_train, model, epochs, batchSize):
                  batch_size=batchSize, epochs=epochs,
                  validation_split=0.1,callbacks=[EarlyStopping(monitor='val_loss', patience=3, min_delta=0.0001)])
 
-dataFrame = pandas.read_csv("../data/modelinputwithmeanNew.csv")
-X_train, X_val_and_test, Y_train, Y_val_and_test, X_val, X_test, Y_val, Y_test =  preprocess(dataFrame)
+dataFrame = pandas.read_csv("../data/preprocessedNew.csv")
+X_train, X_val_and_test, Y_train, Y_val_and_test, X_val, X_test, Y_val, Y_test = preprocess(dataFrame)
 
 # input e.g. [10074.535, 2079.027, 828.732, 1558.949, 322.472, 639.5, 36.95]
 def preprocess_inferring_data(data):
@@ -100,7 +102,7 @@ def run(scheme):
         print(classification_report(y_labels, y_pred))
         plot_history(history)
     else:
-        print("PLEASE ENTER A FUCKING LEGIT SCHEME.")
+        print("PLEASE ENTER A LEGIT SCHEME.")
 
 if __name__ == '__main__':
     userInput = input("Please enter a scheme: ")
