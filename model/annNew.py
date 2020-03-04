@@ -26,9 +26,9 @@ dataframe = pandas.read_csv("../data/preprocessedNew.csv")
 dataset = dataframe.values
 # X = dataset[:, 0:7].astype(float)
 # X = dataset[: , [1,2,3,5,6]]
-X = dataset[: ,[6, 7, 8, 9, 19, 22]].astype(float)
+X = dataset[: ,[6, 7, 8, 9, 19, 22]]
 Y = dataset[:, 5]
-print(X)
+# print(X)
 # print(Y)
 # # encode class values as integers
 # encoder = LabelEncoder()
@@ -37,14 +37,9 @@ print(X)
 # convert integers to dummy variables (i.e. one hot encoded)
 dummy_y = np_utils.to_categorical(Y)
 print(dummy_y[0])
-# min_max_scaler = preprocessing.MinMaxScaler()
-# X_scaler = min_max_scaler.fit_transform(X)
 min_max_scaler = preprocessing.MinMaxScaler()
-min_max_scaler.fit(X)
-X_scaler = min_max_scaler.transform(X)
+X_scaler = min_max_scaler.fit_transform(X)
 print(X_scaler)
-
-
 
 # std_scaler = preprocessing.StandardScaler()
 # X_scaler = std_scaler.fit_transform(X)
@@ -66,13 +61,11 @@ def baseline_model():
     model = Sequential()
     model.add(Dense(32, input_dim=6, activation='relu'))
     model.add(Dropout(0.2))
-    # model.add(Dense(60, activation='sigmoid'))
-    # model.add(Dropout(0.2))
-    # model.add(Dense(60, activation='tanh'))
+    # model.add(Dense(60, activation='relu'))
     # model.add(Dropout(0.2))
     model.add(Dense(3, activation='softmax'))
     # Compile model
-    model.compile(loss='categorical_crossentropy', optimizer= 'adam', metrics=['accuracy'])
+    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
     return model
 
 
@@ -94,9 +87,9 @@ model = baseline_model()
 #                  batch_size=batchSize, epochs=epochs,
 #                  validation_data=(X_val, Y_val), callbacks=[EarlyStopping(monitor='val_loss', mode='min',  verbose=1,  patience=3, min_delta=0.001)])
 
-# model.save("MLPrel2.h5")
+model.save("MLPrel1.h5")
 
-hist = model.fit(X_train, Y_train,
+hist = baseline_model().fit(X_train, Y_train,
                  batch_size=batchSize, epochs=epochs,
                  validation_split=0.1,callbacks=[EarlyStopping(monitor='val_loss', patience=3, min_delta=0.0001)])
 
@@ -121,15 +114,15 @@ hist = model.fit(X_train, Y_train,
 # print("Loss: %.2f%%  Accuracy: (%.2f%%)" % (evaluate[0], evaluate[1]))
 # print('Test set\n  Loss: {:0.3f}\n  Accuracy: {:0.3f}'.format(evaluate[0],evaluate[1])) #correct one
 
-y_pred = model.predict_classes(X_test, batch_size=batchSize, verbose=0)
+y_pred = baseline_model().predict_classes(X_test, batch_size=batchSize, verbose=0)
 # def train(X_train, Y_train, model, epochs, batchSize):
 #     return model.fit(X_train, Y_train,
 #                  batch_size=batchSize, epochs=epochs,
 #                  validation_split=0.1,callbacks=[EarlyStopping(monitor='val_loss', patience=3, min_delta=0.0001)])
-print(y_pred)
-print(Y_test)
+print(y_pred[1])
+print(Y_test[1])
 y_labels = np.argmax(Y_test, axis=1)
-print(y_labels)
+print(y_labels[1])
 print('ANN model accuracy:', (accuracy_score(y_labels, y_pred))*100)
 cm = confusion_matrix(y_labels, y_pred)
 print(cm)
@@ -199,25 +192,3 @@ plt.ylabel('Accuracy')
 plt.xlabel('Epoch')
 plt.legend(['Train', 'Val'], loc='lower right')
 plt.show()
-
-# array = [0.623895554, 0.111140939, 0.072458134, 0.157411484, 722, 60.335] #drowsy input for ann_relu_median2.h5
-# array = [0.712715176, 0.130172962, 0.046944429, 0.091218199, 641, 36.95] #awake input for ann_relu_median.h5
-# array = [0.557861696, 0.151026969, 0.088255769, 0.172795282, 880.5, 56.16] #modertate input for ann_relu_median .h5
-# array = [0.336062623, 0.165285991, 0.115331128, 0.311817149, 981, 62.17]#drowsy input
-# array = [0.452617331, 0.154536723, 0.097000164, 0.233127982, 862, 62.88] #drowsy
-# array = [10074.535, 2079.027, 828.732, 1558.949, 322.472, 639.5, 36.95] #awake input for ANN_median.h5
-# array = [5432.867, 2672.052, 1864.47, 5040.909, 1155.936, 981, 62.17] #drowsy input for ANN_median.h5
-# Xnew = np.array(([[0.557861696, 0.151026969, 0.088255769, 0.172795282, 880.5, 56.16],[0.623895554, 0.111140939, 0.072458134, 0.157411484, 722, 60.335],[0.336062623, 0.165285991, 0.115331128, 0.311817149, 981, 62.17]]))
-Xnew = np.array([[0.712715176, 0.130172962, 0.046944429, 0.091218199, 641, 36.95]])
-X_scaler = min_max_scaler.transform(Xnew)
-ynew = model.predict_classes(Xnew)
-for i in range(len(Xnew)):
-    print("X=%s, Predicted=%s" % (X_scaler[i], ynew[i]))
-# print(X_scaler)
-# array = np.asarray(X_scaler).reshape(1,6)
-# pred = model.predict(array)
-# pred = model.predict_classes(preprocess_inferring_data([7128.828,2629.557,1074.656,1879.437,410.078,941,62.02]), verbose=0)
-# pred = model.predict(preprocess_inferringd_data(X_test[1]))
-labels = ['Awake', 'Moderate', 'Drowsy']
-# y_label = np.argmax(pred)
-# print("Predicted vector: ", pred , " Predicted Class: ", labels[np.argmax(pred)])

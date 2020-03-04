@@ -5,21 +5,14 @@ import pandas as pd
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from sklearn.utils import shuffle
 
-dataframe = pd.read_csv("../data/modelinputANN.csv") #read training data set
+dataframe = pd.read_csv("../data/preprocessedNew.csv") #read training data set
 df = shuffle(dataframe)
-#d = dataset.head()
-#X = dataset.iloc[:, 0:2].values  # first two cloumns are inputs for train model
-X = df.iloc[: , [1,2,3,5,6]].values
-# X = df.iloc[:, 0:7].values
+X = df.iloc[: , [6, 7, 8, 9, 19, 22]].values
 print(X)
-y = df.iloc[:, -1].values
+y = df.iloc[:, 5].values
 print(y)
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=0) #randomly select 20% as testing data set
-
-# sc = StandardScaler() # scale the data set
-# X_train = sc.fit_transform(X_train)
-# X_test = sc.transform(X_test)
 
 minmax = MinMaxScaler() # scale the data set
 X_train = minmax.fit_transform(X_train)
@@ -31,7 +24,7 @@ model = KNeighborsClassifier(n_neighbors=3)
 model.fit(X_train,y_train)
 
 #Predict Output
-y_pred= model.predict(X_test) # 0:Overcast, 2:Mild
+y_pred= model.predict(X_test)
 print(y_pred)
 
 print('model accuracy: ',(accuracy_score(y_test, y_pred))*100)
