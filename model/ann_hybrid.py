@@ -12,6 +12,7 @@ from sklearn import preprocessing
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
+import win32com.client as wincl
 
 np.random.seed(7)
 
@@ -106,7 +107,7 @@ def run(scheme):
             # array = [0.52087612, 0.41389001, 0.50340108, 0.41204823, 0.79015335, 0.97323066] #drowsy scaled
             # array = [0.71250135, 0.30932417, 0.29223186, 0.23184345, 0.0653753,  0.05903924] #awake scaled
             # Xnew = np.array(([[0.557861696, 0.151026969, 0.088255769, 0.172795282, 880.5, 56.16],[0.623895554, 0.111140939, 0.072458134, 0.157411484, 722, 60.335],[0.336062623, 0.165285991, 0.115331128, 0.311817149, 981, 62.17]]))
-            Xnew = np.array([[0.67233705, 0.138048457, 0.062574542, 0.104199826, 871.5, 42.525]])
+            Xnew = np.array([[0.712715176, 0.130172962, 0.046944429, 0.091218199, 641, 36.95]])
            # array = np.asarray(array).reshape(1,6)
             X_scaler = scaler.transform(Xnew)
             print(X_scaler)
@@ -116,6 +117,13 @@ def run(scheme):
             # pred = model.predict(preprocess_inferringd_data(X_test[1]))
             labels = ['Awake', 'Moderate', 'Drowsy']
             print("Predicted vector: ", pred , " Predicted Class: ", labels[np.argmax(pred)])
+            speak = wincl.Dispatch("SAPI.SpVoice")
+            if labels[np.argmax(pred)] == 'Awake':
+                speak.Speak("person is awake")
+            elif labels[np.argmax(pred)] == 'Moderate':
+                speak.Speak("person is moderately drowsy")
+            else:
+                speak.Speak("person is drowsy")
             # Do whatever
             # for i in range(len(Xnew)):
             #     print("X=%s, Predicted=%s" % (X_scaler[i], pred[i]))
