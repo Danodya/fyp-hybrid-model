@@ -9,7 +9,6 @@ from numpy import hstack
 import matplotlib.pyplot as plt
 import numpy as np
 
-
 from sklearn import preprocessing
 from sklearn.metrics import accuracy_score, classification_report
 from sklearn.model_selection import train_test_split
@@ -18,14 +17,14 @@ from tensorflow_core.python import confusion_matrix
 # split a multivariate sequence into samples
 def split_sequences(X_scaler, dummy_y, n_steps):
     x, y = list(), list()
-    for i in range(len(X)):
+    for i in range(len(X)-1):
         # find the end of this pattern
         end_ix = i + n_steps
         # check if we are beyond the dataset
-        if end_ix > len(X):
+        if end_ix > len(X)-1:
             break
         # gather input and output parts of the pattern
-        seq_x, seq_y = X[i:end_ix, :len(X[i])], dummy_y[end_ix - 1, :len(dummy_y[i])]
+        seq_x, seq_y = X[i:end_ix, :len(X[i])], dummy_y[end_ix, :len(dummy_y[i])]
         x.append(seq_x)
         y.append(seq_y)
     return array(x), array(y)
@@ -59,7 +58,7 @@ print(X_scaler)
 # choose a number of time steps
 n_steps = 3
 
-# # convert into input/output
+# convert into input/output
 x, y = split_sequences(X_scaler, dummy_y, n_steps)
 print(x.shape, y.shape)
 
@@ -86,9 +85,11 @@ model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accur
 history = model.fit(x, y, epochs=epochs, batch_size=batchSize, verbose=0, validation_split=0.1)
 print(X_test.shape)
 
-#evaluate the model
-accr = model.evaluate(X_test.reshape((X_test.shape[0], n_steps, n_features)), Y_test)
+#model summary
 print(model.summary())
+
+#model accuracy
+accr = model.evaluate(X_test.reshape((X_test.shape[0], n_steps, n_features)), Y_test)
 print('Test set\n  Loss: {:0.3f}\n  Accuracy: {:0.3f}'.format(accr[0], accr[1]))
 
 #save model

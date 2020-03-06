@@ -53,12 +53,6 @@ dataFrame = pandas.read_csv("../data/preprocessedNew.csv")
 X_train, X_val_and_test, Y_train, Y_val_and_test, X_val, X_test, Y_val, Y_test = preprocess(dataFrame)
 
 # input e.g. [10074.535, 2079.027, 828.732, 1558.949, 322.472, 639.5, 36.95]
-# def preprocess_inferring_data(data):
-#     array = []
-#     for d in data:
-#         array.append([d, 0, 0, 0, 0, 0, 0])
-#     print(np.asarray(array))
-#     return np.asarray(array)
 def preprocess_inferring_data(data):
     array = []
     for d in data:
@@ -113,7 +107,6 @@ def run(scheme):
             print(X_scaler)
             # make a prediction
             pred = model.predict(X_scaler)
-            # pred = model.predict_classes(preprocess_inferring_data([7128.828,2629.557,1074.656,1879.437,410.078,941,62.02]), verbose=0)
             # pred = model.predict(preprocess_inferringd_data(X_test[1]))
             labels = ['Awake', 'Moderate', 'Drowsy']
             print("Predicted vector: ", pred , " Predicted Class: ", labels[np.argmax(pred)])

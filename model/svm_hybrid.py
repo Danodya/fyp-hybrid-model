@@ -13,20 +13,6 @@ import pickle
 import matplotlib.pyplot as plt
 # dataset = pd.read_csv("../data/modelinputwithmeanNew.csv")
 dataset = pd.read_csv('../data/preprocessedNew.csv')
-# print(dataset.describe())
-# dataset.hist(figsize=(6,6))
-# plt.figure()
-# dataset.plot.hist(alpha=0.3, stacked=True, bins=10)
-# dataset.plot.hist(alpha=0.3, stacked=True)
-# plt.show()
-# gca stands for 'get current axis'
-# ax = plt.gca()
-#
-# dataset.plot(kind='scatter',x='Delta Power',y='Class',ax=ax)
-# dataset.plot(kind='scatter',x='Theta Power',y='Class', color='red', ax=ax)
-
-# plt.show()
-# dataset.plot(kind='histogram')
 df = shuffle(dataset)
 # X = df.iloc[:, 0:7].values
 # X = df.iloc[:, [6,7,8,20,21,23,24]].values
