@@ -30,10 +30,11 @@ For an example, consider the request below.
 ```python
 import requests
 
-url = 'https://192.168.8.100:5000/eeg/data'
-myobj = {'eeg': '[10, 20, 30, 40, 50]'}
+data = [10, 20, 30, 40]
 
-x = requests.post(url, data = myobj)
+url = 'http://192.168.8.100:5000/eeg/data'
+
+x = requests.post(url, json = {"eeg": data}, headers={'content-type': 'application/json', 'Accept': 'application/json'})
 ```
 
 ## References 

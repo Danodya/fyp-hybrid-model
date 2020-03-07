@@ -62,9 +62,10 @@ with open("config.yaml", 'r') as stream:
 def predictEeg():
     req = request.data.decode("utf-8")
     data = json.loads(req)
-    array = data.get('data')
+    array = data.get('eeg')
     queue['eeg'] = array
-    return array
+    print(array)
+    return {"SUCCESS": 200}
 
 
 # Receives Data
@@ -72,9 +73,10 @@ def predictEeg():
 def predictEmg():
     req = request.data.decode("utf-8")
     data = json.loads(req)
-    array = data.get('data')
+    array = data.get('emg')
     queue['emg'] = array
-    return array
+    print(array)
+    return {"SUCCESS": 200}
 
 
 # Receives Data
@@ -82,9 +84,9 @@ def predictEmg():
 def predictEcg():
     req = request.data.decode("utf-8")
     data = json.loads(req)
-    array = data.get('data')
-    queue['ecg'] = array
-    return array
+    array = data.get('ecg')
+    print(array)
+    return {"SUCCESS": 200}
 
 
 # Spawns the worker thread
