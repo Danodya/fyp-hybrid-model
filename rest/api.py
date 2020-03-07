@@ -21,13 +21,20 @@ def listen():
     thread.daemon = True
     thread.start()
     print("+++++++ Thread Started +++++++")
+    return thread
 
 
 def trigger():
     while True:
         if len(queue) == 3:
+            # Consume from the queue one by one.
             print("QUEUE IS FULL. Train the model.")
             queue.clear()
+
+
+# processes the arrived set of data
+def consume():
+    print("Consume")
 
 
 with open("config.yaml", 'r') as stream:
@@ -69,7 +76,7 @@ def predictEcg():
 
 
 # Spawns the worker thread
-listen()
+thread = listen()
 
 
 app.run(host['host'])
