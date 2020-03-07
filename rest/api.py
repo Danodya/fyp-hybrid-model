@@ -17,6 +17,10 @@ queue = dict()
 
 
 def listen():
+    """
+    Spawns daemon threads
+    :return: returns the spawned thread
+    """
     thread = Thread(target=trigger)
     thread.daemon = True
     thread.start()
@@ -25,8 +29,12 @@ def listen():
 
 
 def trigger():
+    """
+    Triggers to consume from queue when the features are retrieved.
+    :return:
+    """
     while True:
-        if len(queue) == 3:
+        if len(queue) == 6:
             # Consume from the queue one by one.
             print("QUEUE IS FULL. Train the model.")
             queue.clear()
@@ -34,6 +42,10 @@ def trigger():
 
 # processes the arrived set of data
 def consume():
+    """
+    Consumption method
+    :return:
+    """
     print("Consume")
 
 
