@@ -1,7 +1,7 @@
 import requests
 
 
-def post(dictionary, modality_type, remote_ip):
+def post(data, modality_type, remote_ip):
     """
     Sends the dataset to  :param remote_ip
     :param dictionary: data to be sent
@@ -11,5 +11,5 @@ def post(dictionary, modality_type, remote_ip):
     """
     url = 'http://{}:5000/{}/data'
     return requests.post(url.format(str(remote_ip), str(modality_type)),
-                         json={str(modality_type): dictionary},
+                         json={str(modality_type): data},
                          headers={'content-type': 'application/json', 'Accept': 'application/json'})
