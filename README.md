@@ -54,7 +54,7 @@ Using the `Agent`, third party applications (`EEG, EMG, ECG` producers) can send
 Your code here
 """
 
-response = post([10, 20, 30, 40], "eeg", "192.168.8.100")
+response = post([10, 20, 30, 40], "eeg", "192.168.8.100")   # This will send your data to the fusion module
 
 """
 Rest of the code here
