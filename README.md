@@ -49,6 +49,7 @@ Using the `Agent`, third party applications (`EEG, EMG, ECG` producers) can send
 4. Execute the imported `post()` method. For an example
 
 ```python
+from agent.api_agent import *
 
 """
 Your code here
