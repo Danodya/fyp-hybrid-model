@@ -41,7 +41,7 @@ x = requests.post(url, json = {"eeg": data}, headers={'content-type': 'applicati
 
 ### Using the Agent Library
 
-Using the `Agent`, third party applications (`EEG, EMG, ECG` producers) can send the accumulated data to the fusion engine. 
+Using the `Agent`, third party applications (`EEG, EMG, ECG` producers) can send the accumulated data to the fusion engine. You can download the library from [this link](https://drive.google.com/open?id=16yBS9z8ifUw14iPW6_O4AhFxoLXKeisl).
 
 1. Adhere to the proper structure of modules. That is, in the root directory, have an empty file named `__init__.py`. 
 2. Place `api_agent.py` inside a folder named `agent`. Create an empty `__init__.py` inside the `agent` folder to adhere to proper module structure of Python.
