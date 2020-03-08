@@ -19,10 +19,12 @@ WRITE THE SETTING UP SECTION HERE.
 ```python
 import requests
 
-url = 'https://<HOST>:5000/<MODALITY_TYPE>/data'
-myobj = {'<MODALITY_TYPE>': '<values in an array>'}
+# Data as an array
+data = [10, 20, 30, 40]
 
-x = requests.post(url, data = myobj)
+url = 'http://192.168.8.100:5000/<MODALITY_TYPE>/data'
+
+x = requests.post(url, json = {"eeg": data}, headers={'content-type': 'application/json', 'Accept': 'application/json'})
 ```
 
 For an example, consider the request below.
