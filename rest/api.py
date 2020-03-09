@@ -2,8 +2,6 @@ from __future__ import print_function
 
 import flask
 import yaml
-# from tensorflow.keras.models import load_model
-from keras.engine.saving import load_model
 from pickle import load
 from flask import request
 import json
@@ -14,15 +12,6 @@ from tensorflow.python.keras.backend import set_session
 from tensorflow.python.keras.models import load_model
 
 app = flask.Flask(__name__)
-# model = load_model("ann_relu_median2.h5")
-# global graph
-# graph = tf.Graph().get_default_graph()
-# scaler = load(open('Xscaler.pkl', 'rb'))
-
-
-
-# queue = dict()
-# Xnew = []
 
 
 def listen():
@@ -86,13 +75,6 @@ def consume():
     print(Xnew)
     return Xnew
 
-# with open("config.yaml", 'r') as stream:
-#     try:
-#         host = yaml.safe_load(stream)
-#     # TODO: Handle exceptions
-#     except yaml.YAMLError as exc:
-#         print(exc)
-
 
 # Receives Data
 @app.route("/eeg/data", methods=["POST"])
@@ -131,36 +113,28 @@ def predictEcg():
     return {"SUCCESS": 200}
 
 
-# # Spawns the worker thread
-# thread = listen()
-#
-# app.run(host['host'])
-# # app.run('192.168.8.100')
-
 if __name__ == "__main__":
-   print(("* Loading Keras model and Flask starting server..."
-      "please wait until server has fully started"))
+    print(("* Loading Keras model and Flask starting server..."
+           "please wait until server has fully started"))
 
-   # global graph
-   # tf_config = some_custom_config
-   sess = tf.Session()
-   graph = tf.get_default_graph()
-   set_session(sess)
-   model = load_model("ann_relu_median2.h5")
-   scaler = load(open('Xscaler.pkl', 'rb'))
-   queue = dict()
-   Xnew = []
-   # Add threaded=False if you want to use keras instead of tensorflow.keras
-   with open("config.yaml", 'r') as stream:
-       try:
-           host = yaml.safe_load(stream)
-       # TODO: Handle exceptions
-       except yaml.YAMLError as exc:
-           print(exc)
-   # Spawns the worker thread
-   thread = listen()
+    sess = tf.Session()
+    graph = tf.get_default_graph()
+    set_session(sess)
+    model = load_model("ann_relu_median2.h5")
+    scaler = load(open('Xscaler.pkl', 'rb'))
 
-   # app.run(host['host'], threaded=False)
-   app.run(host['host'])
-   # app.run('192.168.8.100')
-   # app.run(host='0.0.0.0', port='8000', threaded=False)
+    queue = dict()
+    Xnew = []
+
+    # Add threaded=False if you want to use keras instead of tensorflow.keras
+    with open("config.yaml", 'r') as stream:
+        try:
+            host = yaml.safe_load(stream)
+        # TODO: Handle exceptions
+        except yaml.YAMLError as exc:
+            print(exc)
+
+    # Spawns the worker thread
+    thread = listen()
+
+    app.run(host['host'])
