@@ -27,6 +27,7 @@ def listen():
 
 
 def trigger():
+    global queue
     """
     Triggers to consume from queue when the features are retrieved.
     :return:
@@ -56,6 +57,7 @@ def trigger():
 
 # processes the arrived set of data
 def consume():
+    global queue
     """
     Consumption method
     :return:
@@ -79,7 +81,7 @@ def consume():
 # Receives Data
 @app.route("/eeg/data", methods=["POST"])
 def predictEeg():
-    print('recieved')
+    print('EEG data: RECEIVED')
     req = request.data.decode("utf-8")
     data = json.loads(req)
     array = data.get('eeg')
@@ -92,6 +94,7 @@ def predictEeg():
 # Receives Data
 @app.route("/emg/data", methods=["POST"])
 def predictEmg():
+    print('EMG data: RECEIVED')
     req = request.data.decode("utf-8")
     data = json.loads(req)
     array = data.get('emg')
@@ -104,6 +107,7 @@ def predictEmg():
 # Receives Data
 @app.route("/ecg/data", methods=["POST"])
 def predictEcg():
+    print('ECG data: RECEIVED')
     req = request.data.decode("utf-8")
     data = json.loads(req)
     array = data.get('ecg')
@@ -137,4 +141,4 @@ if __name__ == "__main__":
     # Spawns the worker thread
     thread = listen()
 
-    app.run(host['host'])
+    app.run(host['host'], port='5000')
