@@ -27,11 +27,11 @@ def listen():
 
 
 def trigger():
-    global queue
     """
     Triggers to consume from queue when the features are retrieved.
     :return:
     """
+    global queue
     while True:
         if len(queue) == 3:
             # Consume from the queue one by one.
@@ -57,11 +57,11 @@ def trigger():
 
 # processes the arrived set of data
 def consume():
-    global queue
     """
     Consumption method
     :return:
     """
+    global queue
     eeg_val = queue['eeg']
     emg_val = queue['emg']
     emg_val = np.median(emg_val)
