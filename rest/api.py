@@ -1,19 +1,24 @@
 from __future__ import print_function
 
 import flask
+import self as self
 import yaml
+# from tensorflow.keras.models import load_model
 from keras.engine.saving import load_model
 from pickle import load
 from flask import request
 import json
 from threading import Thread
+import numpy as np
 
 app = flask.Flask(__name__)
+# model = load_model("ann_relu_median2.h5")
+# scaler = load(open('Xscaler.pkl', 'rb'))
 
-model = load_model("ann_relu_median2.h5")
-scaler = load(open('Xscaler.pkl', 'rb'))
+
 
 queue = dict()
+Xnew = []
 
 
 def listen():
@@ -34,10 +39,19 @@ def trigger():
     :return:
     """
     while True:
-        if len(queue) == 6:
+        if len(queue) == 3:
             # Consume from the queue one by one.
-            print("QUEUE IS FULL. Train the model.")
+            print("QUEUE IS FULL. Pass to the model.")
+            xtest = consume()
             queue.clear()
+            model = load_model("ann_relu_median2.h5")
+            scaler = load(open('Xscaler.pkl', 'rb'))
+            Xnew = np.array([xtest])
+            X_scaler = scaler.transform(Xnew)
+            print(X_scaler)
+            pred = model.predict(X_scaler)
+            labels = ['Awake', 'Moderate', 'Drowsy']
+            print("Predicted vector: ", pred, " Predicted Class: ", labels[np.argmax(pred)])
 
 
 # processes the arrived set of data
@@ -46,8 +60,20 @@ def consume():
     Consumption method
     :return:
     """
-    print("Consume")
-
+    eeg_val = queue['eeg']
+    emg_val = queue['emg']
+    # emg_val = np.median(emg_val)///
+    # print(emg_val)
+    ecg_val = queue['ecg']
+    # ecg_val = np.median(ecg_val)///
+    # print(ecg_val)
+    Xnew = eeg_val + ecg_val + emg_val
+    # for i in range(len(eeg_val)):///
+    #     Xnew.append(eeg_val[i])///
+    # Xnew.append(ecg_val)///
+    # Xnew.append(emg_val)//
+    print(Xnew)
+    return Xnew
 
 with open("config.yaml", 'r') as stream:
     try:
@@ -60,10 +86,12 @@ with open("config.yaml", 'r') as stream:
 # Receives Data
 @app.route("/eeg/data", methods=["POST"])
 def predictEeg():
+    print('recieved')
     req = request.data.decode("utf-8")
     data = json.loads(req)
     array = data.get('eeg')
     queue['eeg'] = array
+    print(type(array))
     print(array)
     return {"SUCCESS": 200}
 
@@ -75,6 +103,7 @@ def predictEmg():
     data = json.loads(req)
     array = data.get('emg')
     queue['emg'] = array
+    print(type(array))
     print(array)
     return {"SUCCESS": 200}
 
@@ -85,6 +114,8 @@ def predictEcg():
     req = request.data.decode("utf-8")
     data = json.loads(req)
     array = data.get('ecg')
+    queue['ecg'] = array
+    print(type(array))
     print(array)
     return {"SUCCESS": 200}
 
@@ -92,5 +123,6 @@ def predictEcg():
 # Spawns the worker thread
 thread = listen()
 
-
 app.run(host['host'])
+# app.run('192.168.8.100')
+
