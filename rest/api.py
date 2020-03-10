@@ -42,6 +42,7 @@ def trigger():
             # scaler = load(open('Xscaler.pkl', 'rb'))
             Xnew = np.array([xtest])
             X_scaler = scaler.transform(Xnew)
+            xtest.clear()
             print(X_scaler)
             global sess
             global graph
@@ -70,6 +71,7 @@ def consume():
     ecg_val = np.median(ecg_val)
     # print(ecg_val)
     # Xnew = eeg_val + ecg_val + emg_val
+    global Xnew
     for i in range(len(eeg_val)):
         Xnew.append(eeg_val[i])
     Xnew.append(ecg_val)
