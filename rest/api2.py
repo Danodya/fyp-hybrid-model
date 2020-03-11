@@ -55,11 +55,10 @@ def trigger():
                     pred = modelLSTM.predict(x_input)
                     labels = ['Awake', 'Moderate', 'Drowsy']
                     print("LSTM Predicted vector: ", pred, " LSTM Predicted Class: ", labels[np.argmax(pred)])
-            # model = load_model("ann_relu_median2.h5")
-            # scaler = load(open('Xscaler.pkl', 'rb'))
             xANN = np.array([xtest])
             X_scaler = scaler.transform(xANN)
-            xtest.clear()
+            # xtest.clear()
+            xtest = []
             print(X_scaler)
             global sess
             global graph
@@ -84,6 +83,7 @@ def consume():
     Consumption method
     :return:
     """
+
     global queue
     eeg_val = queue['eeg']
     emg_val = queue['emg']
@@ -94,7 +94,9 @@ def consume():
     # print(ecg_val)
     # Xnew = eeg_val + ecg_val + emg_val
     global Xnew
+    Xnew = []
     global XnewLSTM
+    print('XnewLSTM', XnewLSTM)
     for i in range(len(eeg_val)):
         Xnew.append(eeg_val[i])
     Xnew.append(ecg_val)
