@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 ecg_awake_processed_df = pd.read_csv('../../../data/data-preprocess/ECG/ECG-awake/ECG-awake_processed_data.csv')
 print(ecg_awake_processed_df)
 awakeProcessedSet = ecg_awake_processed_df.values
+print(awakeProcessedSet)
 X = awakeProcessedSet[:,0]
 print(X)
 print(len(X))
@@ -38,11 +39,11 @@ print(sdArray)
 print(len(sdArray))
 
 #create a csv file to store prerocessed data
-with open('../../../data/data-preprocess/ECG/ECG-awake/ECG-awake_10Sec_processed_madian_mean_sd_data.csv','w', newline='') as ncsv:
-    newcsv = csv.writer(ncsv)
-    newcsv.writerow(['MedianNN', 'MeanNN', 'SDNN', 'Class']) # Class (drowsyness level)
-    for i in range(len(meanArray)):
-        newcsv.writerow([medianArray[i], meanArray[i], sdArray[i], Y[i]])
+# with open('../../../data/data-preprocess/ECG/ECG-awake/ECG-awake_10Sec_processed_madian_mean_sd_data.csv','w', newline='') as ncsv:
+#     newcsv = csv.writer(ncsv)
+#     newcsv.writerow(['MedianNN', 'MeanNN', 'SDNN', 'Class']) # Class (drowsyness level)
+#     for i in range(len(meanArray)):
+#         newcsv.writerow([medianArray[i], meanArray[i], sdArray[i], Y[i]])
 #
 # #read the processed data for 10sec period
 # ecg_awake_10Sec_processed_df = pd.read_csv('../../../data/data-preprocess/ECG/ECG-awake/ECG-awake_10Sec_processed_data.csv')

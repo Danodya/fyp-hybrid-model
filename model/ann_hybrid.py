@@ -1,4 +1,5 @@
 #import relevant libraries
+import time
 from pickle import dump, load
 
 import pandas
@@ -12,7 +13,8 @@ from sklearn import preprocessing
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
-# import win32com.client as wincl
+import win32com.client as wincl
+from sklearn.utils import shuffle
 
 np.random.seed(7)
 
@@ -21,6 +23,7 @@ batchSize = 150
 
 def preprocess(df):
     dataset = df.values
+    # dataset = shuffle(dataset)
     X = dataset[:, [6, 7, 8, 9, 19, 22]]
     Y = dataset[:, 5]
     dummy_y = np_utils.to_categorical(Y)
@@ -38,6 +41,8 @@ def create_model():
     model = Sequential()
     model.add(Dense(32, input_dim=6, activation='relu'))
     model.add(Dropout(0.2))
+    # model.add(Dense(20, activation='relu'))
+    # model.add(Dropout(0.2))
     model.add(Dense(20, activation='relu'))
     model.add(Dropout(0.2))
     model.add(Dense(3, activation='softmax'))
@@ -47,7 +52,7 @@ def create_model():
 def train(X_train, Y_train, model, epochs, batchSize):
     return model.fit(X_train, Y_train,
                  batch_size=batchSize, epochs=epochs,
-                 validation_split=0.1,callbacks=[EarlyStopping(monitor='val_loss', patience=3, min_delta=0.0001)])
+                 validation_split=0.1,callbacks=[EarlyStopping(monitor='val_loss', patience=3, min_delta=0.0001, verbose=1)])
 
 dataFrame = pandas.read_csv("../data/preprocessedNew.csv")
 X_train, X_val_and_test, Y_train, Y_val_and_test, X_val, X_test, Y_val, Y_test = preprocess(dataFrame)
@@ -100,23 +105,47 @@ def run(scheme):
             # array = [5432.867, 2672.052, 1864.47, 5040.909, 1155.936, 981, 62.17] #drowsy input for ANN_median.h5
             # array = [0.52087612, 0.41389001, 0.50340108, 0.41204823, 0.79015335, 0.97323066] #drowsy scaled
             # array = [0.71250135, 0.30932417, 0.29223186, 0.23184345, 0.0653753,  0.05903924] #awake scaled
-            # Xnew = np.array(([[0.557861696, 0.151026969, 0.088255769, 0.172795282, 880.5, 56.16],[0.623895554, 0.111140939, 0.072458134, 0.157411484, 722, 60.335],[0.336062623, 0.165285991, 0.115331128, 0.311817149, 981, 62.17]]))
-            Xnew = np.array([[0.712715176, 0.130172962, 0.046944429, 0.091218199, 641, 36.95]])
+            # array = [0.702372442, 0.114125849, 0.053172858, 0.109710605, 622, 36.95 ]/
+            # array = [0.62033809, 0.167035897, 0.07225443, 0.117871232, 621.5, 36.22]/
+            # array = [0.75719251, 0.090378895, 0.051246246, 0.083650372, 621, 36.22]/
+            # array = [0.652563033, 0.147962578, 0.073018661, 0.10379426, 621.5, 36.8]/
+            # array = [0.702372442, 0.114125849, 0.053172858, 0.109710605, 622, 36.95]
+            # array = [0.702372442, 0.114125849, 0.053172858, 0.109710605, 622, 36.95]
+            # array = [0.702372442, 0.114125849, 0.053172858, 0.109710605, 622, 36.95]
+            # array = [0.702372442, 0.114125849, 0.053172858, 0.109710605, 622, 36.95]
+            Xnew = np.array(([0.712715176, 0.130172962, 0.046944429, 0.091218199, 641, 36.95],[0.704010824, 0.126155956, 0.050516172, 0.097548184, 771.5, 41.94], [0.607857918, 0.153220842, 0.071482456, 0.139569143, 1021, 60.26]))
+            for i in range(len(Xnew)):
+                array = np.asarray(Xnew[i]).reshape(1, 6)
+                X_scaler = scaler.transform(array)
+                print('Scaled input', X_scaler)
+                pred = model.predict(X_scaler)
+                labels = ['Awake', 'Moderate', 'Drowsy']
+                print("Predicted vector: ", pred, " Predicted Class: ", labels[np.argmax(pred)])
+                speak = wincl.Dispatch("SAPI.SpVoice")
+                if labels[np.argmax(pred)] == 'Awake':
+                    speak.Speak("person is awake")
+                elif labels[np.argmax(pred)] == 'Moderate':
+                    speak.Speak("person is moderately drowsy")
+                else:
+                    speak.Speak("person is drowsy")
+                # time.sleep(3)
+                # print("X=%s, Predicted=%s" % (X_scaler[i], pred[i]))
+            # Xnew = np.array([[0.712715176, 0.130172962, 0.046944429, 0.091218199, 641, 36.95]])
            # array = np.asarray(array).reshape(1,6)
-            X_scaler = scaler.transform(Xnew)
-            print(X_scaler)
-            # make a prediction
-            pred = model.predict(X_scaler)
-            # pred = model.predict(preprocess_inferringd_data(X_test[1]))
-            labels = ['Awake', 'Moderate', 'Drowsy']
-            print("Predicted vector: ", pred , " Predicted Class: ", labels[np.argmax(pred)])
-            # # speak = wincl.Dispatch("SAPI.SpVoice")
-            # if labels[np.argmax(pred)] == 'Awake':
-            #     speak.Speak("person is awake")
-            # elif labels[np.argmax(pred)] == 'Moderate':
-            #     speak.Speak("person is moderately drowsy")
-            # else:
-            #     speak.Speak("person is drowsy")
+           #  X_scaler = scaler.transform(Xnew)
+           #  print(X_scaler)
+           #  # make a prediction
+           #  pred = model.predict(X_scaler)
+           #  # pred = model.predict(preprocess_inferringd_data(X_test[1]))
+           #  labels = ['Awake', 'Moderate', 'Drowsy']
+           #  print("Predicted vector: ", pred , " Predicted Class: ", labels[np.argmax(pred)])
+           #  speak = wincl.Dispatch("SAPI.SpVoice")
+           #  if labels[np.argmax(pred)] == 'Awake':
+           #      speak.Speak("person is awake")
+           #  elif labels[np.argmax(pred)] == 'Moderate':
+           #      speak.Speak("person is moderately drowsy")
+           #  else:
+           #      speak.Speak("person is drowsy")
             # Do whatever
             # for i in range(len(Xnew)):
             #     print("X=%s, Predicted=%s" % (X_scaler[i], pred[i]))

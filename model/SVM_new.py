@@ -1,13 +1,10 @@
-
-
-
 # importing necessary libraries
 import pandas
 import pandas as pd
 import numpy as np
 from sklearn import preprocessing
 from sklearn.metrics import confusion_matrix, classification_report, accuracy_score
-from sklearn.model_selection import train_test_split, cross_val_score, KFold
+from sklearn.model_selection import train_test_split, cross_val_score, KFold, LeaveOneOut
 import pickle
 import matplotlib.pyplot as plt
 from sklearn.svm import SVC
@@ -23,7 +20,7 @@ def preprocess(df):
     return X_train, X_test, y_train, y_test
 
 def create_model(X_train, y_train):
-    model = SVC(kernel='linear', C=1)
+    model = SVC(kernel='linear', C=1, gamma='auto')
     return model
 
 def train(X_train, y_train, model):
@@ -72,8 +69,15 @@ def run(scheme):
         path = input("Enter a path to save the model: ")
         model = create_model(X_train, y_train)
         history = train(X_train, y_train, model)
-        accuracy = model.score(X_test, y_test) * 100
-        print('accuracy of the SVM model: ', accuracy)
+        # create the Cross validation object
+        loo = LeaveOneOut()
+
+        # calculate cross validated (leave one out) accuracy score
+        scores = cross_val_score(model, X_train, y_train, cv=loo, scoring='accuracy')
+
+        print('Cross validated accuracy', scores.mean())
+        # accuracy = model.score(X_test, y_test) * 100
+        # print('accuracy of the SVM model: ', accuracy)
         y_pred = model.predict(X_test)
         pickle.dump(model,open(path, 'wb'))
         print('SVM model accuracy:', (accuracy_score(y_test, y_pred)) * 100)

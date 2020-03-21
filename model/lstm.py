@@ -16,7 +16,7 @@ from sklearn.model_selection import train_test_split
 from tensorflow_core.python import confusion_matrix
 
 # split a multivariate sequence into samples
-def split_sequences(X_scaler, dummy_y, n_steps):
+def split_sequences(X, dummy_y, n_steps):
     x, y = list(), list()
     for i in range(len(X)):
         # find the end of this pattern
@@ -77,7 +77,7 @@ n_features = x.shape[2]
 batchSize=100
 epochs=200
 model = Sequential()
-model.add(LSTM(100, activation='relu', input_shape=(n_steps, n_features), kernel_regularizer=l2(0.01)))
+model.add(LSTM(100, activation='sigmoid', input_shape=(n_steps, n_features), kernel_regularizer=l2(0.01)))
 model.add(Dropout(0.2))
 model.add(Dense(3, activation='softmax'))
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
@@ -92,7 +92,7 @@ print(model.summary())
 print('Test set\n  Loss: {:0.3f}\n  Accuracy: {:0.3f}'.format(accr[0], accr[1]))
 
 #save model
-model.save("lstm2.h5")
+# model.save("lstm4.h5")
 
 y_pred = model.predict_classes(X_test, batch_size=batchSize, verbose=0)
 print(y_pred[1])

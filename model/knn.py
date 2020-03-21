@@ -12,7 +12,7 @@ print(X)
 y = df.iloc[:, 5].values
 print(y)
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=0) #randomly select 20% as testing data set
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0) #randomly select 20% as testing data set
 
 minmax = MinMaxScaler() # scale the data set
 X_train = minmax.fit_transform(X_train)
@@ -31,7 +31,7 @@ print('model accuracy: ',(accuracy_score(y_test, y_pred))*100)
 
 kfold = KFold(n_splits=10, shuffle=True)
 results = cross_val_score(model, X, y, cv=kfold)
-print("Baseline: %.2f%% (%.2f%%)" % (results.mean() * 100, results.std() * 100))
+print("Cross validated accuracy and standard deviation: %.2f%% (%.2f%%)" % (results.mean() * 100, results.std() * 100))
 
 cm = confusion_matrix(y_test, y_pred)
 print(cm)
