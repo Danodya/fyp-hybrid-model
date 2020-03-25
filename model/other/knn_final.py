@@ -75,7 +75,7 @@ plot_densities(dataframe)
 # plot correlation & densities
 plot_correlation(dataframe)
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=0) #randomly select 20% as testing data set
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=0) #randomly select 30% as testing data set
 
 minmax = MinMaxScaler() # scale the data set
 X_train = minmax.fit_transform(X_train)

@@ -57,14 +57,6 @@ def train(X_train, Y_train, model, epochs, batchSize):
 dataFrame = pandas.read_csv("../data/preprocessedNew.csv")
 X_train, X_val_and_test, Y_train, Y_val_and_test, X_val, X_test, Y_val, Y_test = preprocess(dataFrame)
 
-# input e.g. [10074.535, 2079.027, 828.732, 1558.949, 322.472, 639.5, 36.95]
-def preprocess_inferring_data(data):
-    array = []
-    for d in data:
-        array.append([d, 0, 0, 0, 0, 0, 0])
-    print(np.asarray(array))
-    print(np.asarray(array).shape)
-    return np.asarray(array)
 
 def plot_loss(history):
     plt.title('Loss')
@@ -80,11 +72,6 @@ def plot_acuuracy(history):
     plt.legend()
     plt.show()
 
-def retrieve_other_modalites():
-    modelInput = []
-    # TODO: integrate the modalities.
-    return modelInput # e.g. [10074.535, 2079.027, 828.732, 1558.949, 322.472, 639.5, 36.95]
-
 def run(scheme):
     if scheme.lower() == "test":
         modelPath = input("Enter a model path: ")
@@ -93,26 +80,6 @@ def run(scheme):
         if (model ==  None):
             print("Invalid Path")
         else:
-            # print("Model loaded. Please enter an input with shape: " + str(model.layers[0].input_shape))
-            # input to be inferred.
-            # pred = model.predict(preprocess_inferring_data([10074.535, 2079.027, 828.732, 1558.949, 322.472, 639.5, 36.95]))
-            # array = [0.623895554, 0.111140939, 0.072458134, 0.157411484, 722, 60.335] #drowsy input for ann_relu_median2.h5
-            # array = [0.712715176, 0.130172962, 0.046944429, 0.091218199, 641, 36.95] #awake input for ann_relu_median2.h5
-            # array = [0.67233705, 0.138048457, 0.062574542, 0.104199826, 871.5, 42.525] #modertate input for ann_relu_median .h5
-            # array = [0.336062623, 0.165285991, 0.115331128, 0.311817149, 981, 62.17]#drowsy input
-            # array = [0.452617331, 0.154536723, 0.097000164, 0.233127982, 862, 62.88] #drowsy
-            # array = [10074.535, 2079.027, 828.732, 1558.949, 322.472, 639.5, 36.95] #awake input for ANN_median.h5
-            # array = [5432.867, 2672.052, 1864.47, 5040.909, 1155.936, 981, 62.17] #drowsy input for ANN_median.h5
-            # array = [0.52087612, 0.41389001, 0.50340108, 0.41204823, 0.79015335, 0.97323066] #drowsy scaled
-            # array = [0.71250135, 0.30932417, 0.29223186, 0.23184345, 0.0653753,  0.05903924] #awake scaled
-            # array = [0.702372442, 0.114125849, 0.053172858, 0.109710605, 622, 36.95 ]/
-            # array = [0.62033809, 0.167035897, 0.07225443, 0.117871232, 621.5, 36.22]/
-            # array = [0.75719251, 0.090378895, 0.051246246, 0.083650372, 621, 36.22]/
-            # array = [0.652563033, 0.147962578, 0.073018661, 0.10379426, 621.5, 36.8]/
-            # array = [0.702372442, 0.114125849, 0.053172858, 0.109710605, 622, 36.95]
-            # array = [0.702372442, 0.114125849, 0.053172858, 0.109710605, 622, 36.95]
-            # array = [0.702372442, 0.114125849, 0.053172858, 0.109710605, 622, 36.95]
-            # array = [0.702372442, 0.114125849, 0.053172858, 0.109710605, 622, 36.95]
             Xnew = np.array(([0.712715176, 0.130172962, 0.046944429, 0.091218199, 641, 36.95],[0.704010824, 0.126155956, 0.050516172, 0.097548184, 771.5, 41.94], [0.607857918, 0.153220842, 0.071482456, 0.139569143, 1021, 60.26]))
             for i in range(len(Xnew)):
                 array = np.asarray(Xnew[i]).reshape(1, 6)
@@ -130,25 +97,6 @@ def run(scheme):
                     speak.Speak("person is drowsy")
                 # time.sleep(3)
                 # print("X=%s, Predicted=%s" % (X_scaler[i], pred[i]))
-            # Xnew = np.array([[0.712715176, 0.130172962, 0.046944429, 0.091218199, 641, 36.95]])
-           # array = np.asarray(array).reshape(1,6)
-           #  X_scaler = scaler.transform(Xnew)
-           #  print(X_scaler)
-           #  # make a prediction
-           #  pred = model.predict(X_scaler)
-           #  # pred = model.predict(preprocess_inferringd_data(X_test[1]))
-           #  labels = ['Awake', 'Moderate', 'Drowsy']
-           #  print("Predicted vector: ", pred , " Predicted Class: ", labels[np.argmax(pred)])
-           #  speak = wincl.Dispatch("SAPI.SpVoice")
-           #  if labels[np.argmax(pred)] == 'Awake':
-           #      speak.Speak("person is awake")
-           #  elif labels[np.argmax(pred)] == 'Moderate':
-           #      speak.Speak("person is moderately drowsy")
-           #  else:
-           #      speak.Speak("person is drowsy")
-            # Do whatever
-            # for i in range(len(Xnew)):
-            #     print("X=%s, Predicted=%s" % (X_scaler[i], pred[i]))
 
     elif scheme.lower() == "train":
         path = input("Enter a path to save the model: ")
